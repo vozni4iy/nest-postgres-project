@@ -1,0 +1,14 @@
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+    },
+    "eslint.validate": ["javascript", "typescript"],
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.git": true
+    },
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "cSpell.words": ["trivago", "nestjs", "postgres", "typeorm"]
+  }
+  
