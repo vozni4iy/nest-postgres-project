@@ -1,8 +1,9 @@
 import { Repository } from 'typeorm';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { BooksService } from '../books/books.service';
 import { User } from './user.entity';
 
 @Injectable()
@@ -10,6 +11,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @Inject(forwardRef(() => BooksService))
+    private booksService: BooksService,
   ) {}
 
   findAll(): Promise<User[]> {
@@ -31,6 +34,7 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<void> {
+    await this.booksService.removeUserFromBooks(id);
     await this.usersRepository.delete(id);
   }
 }
