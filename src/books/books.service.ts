@@ -1,6 +1,6 @@
 import { In, Repository } from 'typeorm';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from '../users/user.entity';
@@ -23,6 +23,9 @@ export class BooksService {
 
   async findOne(id: string): Promise<any> {
     const book = await this.booksRepository.findOne({ where: { id }, relations: ['authors'] });
+    if (!book) {
+      throw new NotFoundException(`Book with id ${id} not found`);
+    }
     return transformBook(book);
   }
 
@@ -30,6 +33,9 @@ export class BooksService {
     const authors = await this.usersRepository.findBy({
       id: In(bookData.authors),
     });
+    if (authors.length === 0) {
+      throw new NotFoundException(`Authors not found`);
+    }
     const book = this.booksRepository.create({
       ...bookData,
       authors,
@@ -39,9 +45,15 @@ export class BooksService {
 
   async update(id: string, bookData: Partial<Book>): Promise<Book> {
     const book = await this.booksRepository.findOne({ where: { id }, relations: ['authors'] });
+    if (!book) {
+      throw new NotFoundException(`Book with id ${id} not found`);
+    }
     const authors = await this.usersRepository.findBy({
       id: In(bookData.authors),
     });
+    if (authors.length === 0) {
+      throw new NotFoundException(`Authors not found`);
+    }
 
     await this.booksRepository.save({
       ...book,
@@ -52,7 +64,10 @@ export class BooksService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.booksRepository.delete(id);
+    const deleteResult = await this.booksRepository.delete(id);
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Book with id ${id} not found`);
+    }
   }
 
   async removeUserFromBooks(userId: string): Promise<void> {
