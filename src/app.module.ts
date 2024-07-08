@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BooksModule } from './books/books.module';
-import { ValidationMiddleware } from './common/middleware/validation.middleware';
+import { LogMiddleware } from './common/middleware/log.middleware';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -27,6 +27,6 @@ import { UsersModule } from './users/users.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ValidationMiddleware).forRoutes('*');
+    consumer.apply(LogMiddleware).forRoutes('*');
   }
 }
