@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from '../users/user.entity';
 import { Book } from './book.entity';
-import { transformBook } from './books.utils';
+import { BookDTO, CreateBookDTO, TransformedBook, transformBook } from './books.utils';
 
 @Injectable()
 export class BooksService {
@@ -16,12 +16,12 @@ export class BooksService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<TransformedBook[]> {
     const books = await this.booksRepository.find({ relations: ['authors'] });
     return books.map(transformBook);
   }
 
-  async findOne(id: string): Promise<any> {
+  async findOne(id: string): Promise<TransformedBook> {
     const book = await this.booksRepository.findOne({ where: { id }, relations: ['authors'] });
     if (!book) {
       throw new NotFoundException(`Book with id ${id} not found`);
@@ -29,7 +29,7 @@ export class BooksService {
     return transformBook(book);
   }
 
-  async create(bookData: Partial<Book>): Promise<Book> {
+  async create(bookData: CreateBookDTO): Promise<Book> {
     const authors = await this.usersRepository.findBy({
       id: In(bookData.authors),
     });
@@ -43,7 +43,7 @@ export class BooksService {
     return this.booksRepository.save(book);
   }
 
-  async update(id: string, bookData: Partial<Book>): Promise<Book> {
+  async update(id: string, bookData: BookDTO): Promise<TransformedBook> {
     const book = await this.booksRepository.findOne({ where: { id }, relations: ['authors'] });
     if (!book) {
       throw new NotFoundException(`Book with id ${id} not found`);

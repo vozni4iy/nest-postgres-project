@@ -1,12 +1,14 @@
 import { Book } from './book.entity';
 
-type BookWithoutAuthors = Omit<Book, 'authors'>;
+export type BookWithoutAuthors = Omit<Book, 'authors'>;
 type AuthorsInfo = {
   id: string;
   name: string;
 };
 
-type TransformedBook = BookWithoutAuthors & { authorsInfo: AuthorsInfo[] };
+export type BookDTO = BookWithoutAuthors & { authors: string[] };
+export type CreateBookDTO = Omit<BookDTO, 'id'>;
+export type TransformedBook = BookWithoutAuthors & { authorsInfo: AuthorsInfo[] };
 
 export const transformBook = (book: Book): TransformedBook => {
   const { authors, ...bookWithoutAuthors } = book;

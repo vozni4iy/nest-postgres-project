@@ -2,31 +2,29 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put } from '
 
 import { Book } from './book.entity';
 import { BooksService } from './books.service';
+import { BookDTO, CreateBookDTO, TransformedBook } from './books.utils';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  findAll(): Promise<any[]> {
+  findAll(): Promise<TransformedBook[]> {
     return this.booksService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<any> {
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<TransformedBook> {
     return this.booksService.findOne(id);
   }
 
   @Post()
-  create(@Body() book: Partial<Book> & { authors: string[] }): Promise<Book> {
+  create(@Body() book: CreateBookDTO): Promise<Book> {
     return this.booksService.create(book);
   }
 
   @Put(':id')
-  update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() book: Partial<Book> & { authors: string[] },
-  ): Promise<Book> {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() book: BookDTO): Promise<TransformedBook> {
     return this.booksService.update(id, book);
   }
 

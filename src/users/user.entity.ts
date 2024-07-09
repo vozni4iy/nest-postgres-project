@@ -1,5 +1,6 @@
-import { Book } from 'src/books/book.entity';
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Book } from '../books/book.entity';
 
 @Entity()
 export class User {
