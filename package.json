@@ -1,10 +1,10 @@
 {
   "name": "nestjs-postgres-project",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "A demo project for NestJS and postgresql integration",
+  "author": "Ihor Skakun",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "ISC",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
